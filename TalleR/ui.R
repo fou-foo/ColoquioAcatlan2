@@ -30,28 +30,25 @@ body <- dashboardBody(
     tabItem(tabName = "DWD",
             h2("Geometria de DWD, data piling y el fracaso de SVM"),
       fluidRow(
-            box(  #title = "Distribución sobre la dirección óptima de Bayes",
+            box(  #title = '',
                #   background = "light-blue",
               #background = "green",
               #solidHeader = TRUE,
               plotlyOutput("puntos", height = 230)
             ),
-            box(
-             # title = "Distribución sobre la dirección óptima de Bayes",
+            box( # title = "",
               #background = "light-blue", solidHeader = TRUE,
               plotlyOutput("Bayes", height = 230)
             )
           ),
             fluidRow(
-            box(
-              #title = "Proyección sobre la dirección MDP",
+            box(              #title = "",
                #solidHeader = TRUE, background = 'light-blue',
               plotlyOutput("DWD", height = 230)
               ),
             fluidRow(
-            box(
-              title = "¿Qué dimensión?",
-              "Tamaño de muestra fijo 20", br(),
+            box( #title = "",
+              "", br(),
               sliderInput("d", "d", min = 2, max = 1000, step = 5, value = 2)
             ))
           ),
@@ -62,24 +59,24 @@ body <- dashboardBody(
                 h6("Las nuevas observaciones se espera que aparezcan fuera de este subespacio"),
             h6('En el contexto de microarreglos el interes recae solo en algunos genes y esta atencion es mas dificil de antener solo con algunas comb. lin. (i.e. cualquier base degerado por los datos) de los genes considerados')
           ))
-    )#,
+    ),
 
     #la tab de la derivacion
-     # tabItem(tabName = "Optimizacion",  h2("Problema de opti de DWD"),
-     #         fluidRow( h1('                        '),
-     #           box(width = 12, column(4), column(3,
-     #                   img(src='margen.png', align = "center", height = 400),
-     #                   column(4)
-     #           ))), hr(),
-     #         fluidRow(
-     #           box( width = 12,       column(6,  withMathJax(includeMarkdown(("SVM.Rmd")))) ,
-     #
-     #                   column(6, withMathJax(includeMarkdown(("planteamientoDWD.Rmd"))))
-     #             )
-     #         )
-     #
-     #
-     #        )
+      tabItem(tabName = "Optimizacion",  h2("Problema de opti de DWD"),
+              fluidRow( h1('                        '),
+                box(width = 12, column(4), column(3,
+                        img(src='margen.png', align = "center", height = 400),
+                        column(4)
+                ))), hr(),
+              fluidRow(
+                box( width = 12,       column(6,  withMathJax(includeMarkdown(("SVM.Rmd")))) ,
+
+                        column(6, withMathJax(includeMarkdown(("planteamientoDWD.Rmd"))))
+                  )
+              )
+
+
+             )
 
     )
   )

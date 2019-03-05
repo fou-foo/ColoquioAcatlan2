@@ -7,22 +7,24 @@ library(MASS)
 library(shiny)
 library(knitr)
 library(rmarkdown)
-#setwd('/home/fou/Desktop/MCE_CIMAT/Second/CienciaDeDatos/DWD')
 #########################################
 # Construccion del backend              #
+# aqui se realiza la parte que hace calculos lo relativo al servidor #
 #########################################
 #lectura de datos simulados previamente
 n <- 20
-load('datos.RData')
+load('datos.RData') #datos que simulamos anteriormente
 ####################################
 server <- function(input, output) {
+# noten que esta funcion regresa una funcion ese concepto se llama 'Closure'
+
   #############################markdown de SVM y DWD
-  # output$SVM <- renderUI({
-  #   rmarkdown::render(input = "SVM.Rmd",
-  #                     output_format = html_document(self_contained = TRUE),
-  #                     output_file = 'SVM.html')
-  #   shiny::includeHTML('SVM.html')
-  # })
+   output$SVM <- renderUI({
+     rmarkdown::render(input = "SVM.Rmd",
+                       output_format = html_document(self_contained = TRUE),
+                       output_file = 'SVM.html')
+     shiny::includeHTML('SVM.html')
+   })
 
   #seleccion de datos simulados
   a <- reactive({
@@ -37,7 +39,6 @@ server <- function(input, output) {
     w <- w/sum(w**2)**.5 #normalizamos el vector MDP
     X <- ginv(cov(pos)) %*% (pos.mean - neg.mean)
     X <- X/sum(X**2)**.5 #normalizamos el vector que define al frontera de Bayes
-    #acos(sum(X*w))*360/(2*pi)
     stack$label <- 1
     stack$label[(n+1):(2*n)] <- -1
     Y <- X
@@ -70,7 +71,7 @@ server <- function(input, output) {
     p1 <- ggplot(data = proyec, aes(x=V2, y=V3, color=label))+geom_point() +
       stat_function(fun = function(z){z*(w[1]/w[2])}, aes(colour = I('MDP')), size=1.5)+
       geom_hline(yintercept=0, aes(colour=I('red')),     show.legend = NA)+
-      ggtitle('Proyeccion en la direccion optima de Bayes y MaxDataPiling') +
+      #ggtitle('Proyeccion en la direccion optima de Bayes y MaxDataPiling') +
       theme_minimal()+  xlab('Bayes') + ylab('') +
       scale_colour_manual(
         labels = c('-1', '+1', 'MDP'),
@@ -87,7 +88,9 @@ server <- function(input, output) {
     a <- a()
     proyec <- a[[1]]
     p2 <- ggplot(data = proyec, aes(x=V3, fill=label, colour=label))+geom_density()+
-      geom_rug(sides="b")+ggtitle('Distro en la direccion de Bayes') + theme_minimal()+
+      geom_rug(sides="b")+
+        #ggtitle('Distro en la direccion de Bayes') +
+        theme_minimal()+
       xlab('Bayes') + ylab('') +
       scale_fill_manual(  labels = c('-1', '+1'), values = c("purple", "orange"))+
       scale_color_manual(  labels = c('-1', '+1'), values = c("purple", "orange"))+
